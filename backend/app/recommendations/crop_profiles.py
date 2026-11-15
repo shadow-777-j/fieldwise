@@ -1,0 +1,223 @@
+from typing import Any, Dict, List
+
+DEFAULT_WEIGHTS = {
+    "water_sustainability": 25.0,
+    "soil_improvement": 25.0,
+    "climate_resilience": 20.0,
+    "economic_potential": 15.0,
+    "erosion_protection": 10.0,
+    "farmer_preference": 5.0,
+}
+
+
+# Agronomic strategy catalog covering both tidal coastal Pokkali rice-prawn systems
+# and conventional upland/alluvial rice-pulse, cereal-legume, and rainfed rotations.
+STRATEGY_CATALOG: List[Dict[str, Any]] = [
+    # ---------------- POKKALI TIDAL RICE-PRAWN ECOSYSTEM ----------------
+    {
+        "id": "pokkali_existing_rice_prawn",
+        "strategy_group": "A · Existing Farming System",
+        "system_families": ["pokkali_rice_prawn", "coastal_saline"],
+        "name": "Traditional Pokkali Rice (Jun–Oct) + Brackish Prawn Filtration (Nov–Apr)",
+        "crops": ["Pokkali Rice (Salt-tolerant Virippu)", "Brackish Prawn (Chemmeen Kettu)"],
+        "season_calendar": "Jun–Mid Oct (Monsoon Paddy) → Nov–Apr (Tidal Prawn)",
+        "duration_days": 125,
+        "requires_aquaculture_preservation": True,
+        "is_terrestrial_dry_crop": False,
+        "water_demand_class": "high_monsoon_tidal",
+        "water_requirement_mm": 1150,
+        "nitrogen_fixation_kg_ha": 15,
+        "salinity_tolerance_max_ec": 8.5,
+        "min_ph": 4.5,
+        "max_ph": 8.0,
+        "max_temp_c": 37.0,
+        "waterlogging_tolerance": "high",
+        "submergence_suitable": True,
+        "pest_cycle_interruption": "High — alternating freshwater rice and brackish aquaculture breaks pest/weed cycles naturally.",
+        "organic_matter_contribution": "High — submerged rice stubble decays into detritus supporting natural prawn feed.",
+        "base_scores": {
+            "water_sustainability": 74.0,
+            "soil_improvement": 70.0,
+            "climate_resilience": 72.0,
+            "economic_potential": 82.0,
+            "erosion_protection": 78.0,
+            "farmer_preference": 88.0,
+        },
+        "base_rationale": (
+            "Preserves the centuries-old GI-tagged Pokkali rice–prawn rotational ecosystem without chemical inputs; "
+            "monsoon rainfall flushes dry-season salts while rice stubble feeds post-monsoon prawn aquaculture."
+        ),
+    },
+    {
+        "id": "pokkali_soil_azolla_amendment",
+        "strategy_group": "B · Soil Improvement Strategy",
+        "system_families": ["pokkali_rice_prawn", "coastal_saline"],
+        "name": "Pokkali Rice + Flooded Azolla Biofertilizer & Pre-Monsoon Lime/Biochar Conditioning",
+        "crops": ["Pokkali Rice + Azolla pinnata (Jun–Oct)", "Brackish Prawn Filtration (Nov–Apr)"],
+        "season_calendar": "May (Bund/Lime Prep) → Jun–Oct (Rice + Azolla) → Nov–Apr (Prawn)",
+        "duration_days": 125,
+        "requires_aquaculture_preservation": True,
+        "is_terrestrial_dry_crop": False,
+        "water_demand_class": "high_monsoon_tidal",
+        "water_requirement_mm": 1120,
+        "nitrogen_fixation_kg_ha": 45,
+        "salinity_tolerance_max_ec": 8.5,
+        "min_ph": 4.3,
+        "max_ph": 7.8,
+        "max_temp_c": 36.5,
+        "waterlogging_tolerance": "high",
+        "submergence_suitable": True,
+        "pest_cycle_interruption": "High — Azolla mat suppresses submerged paddy weeds while dual rice–prawn phases disrupt pathogens.",
+        "organic_matter_contribution": "Very High — Azolla N-rich biomass + rice straw boosts organic carbon & buffers acid-sulfate pH.",
+        "base_scores": {
+            "water_sustainability": 78.0,
+            "soil_improvement": 89.0,
+            "climate_resilience": 76.0,
+            "economic_potential": 80.0,
+            "erosion_protection": 84.0,
+            "farmer_preference": 74.0,
+        },
+        "base_rationale": (
+            "Enhances soil organic carbon and buffers coastal acid-saline pH via pre-monsoon agricultural lime/compost "
+            "and flooded-compatible Azolla biofertilizer during the monsoon paddy phase, preserving Nov–Apr prawn culture."
+        ),
+    },
+    {
+        "id": "pokkali_climate_adaptive_vyttila",
+        "strategy_group": "C · Climate-Adaptive Strategy",
+        "system_families": ["pokkali_rice_prawn", "coastal_saline"],
+        "name": "Vyttila-11 Short-Duration Salt/Submergence Rice + Sluice-Managed Brackish Prawn–Crab Integration",
+        "crops": ["Vyttila-11 / Salt-Submergence Tolerant Rice (110d)", "Tidal-Regulated Prawn + Mudcrab Integration"],
+        "season_calendar": "Jun–Late Sep (110d Resilient Rice) → Oct–Apr (Buffered Sluice Aquaculture)",
+        "duration_days": 110,
+        "requires_aquaculture_preservation": True,
+        "is_terrestrial_dry_crop": False,
+        "water_demand_class": "moderate_monsoon_tidal",
+        "water_requirement_mm": 1020,
+        "nitrogen_fixation_kg_ha": 20,
+        "salinity_tolerance_max_ec": 9.5,
+        "min_ph": 4.4,
+        "max_ph": 8.2,
+        "max_temp_c": 38.0,
+        "waterlogging_tolerance": "high",
+        "submergence_suitable": True,
+        "pest_cycle_interruption": "High — earlier rice harvest avoids late-monsoon lodging & cyclone/flood losses.",
+        "organic_matter_contribution": "High — sustained straw incorporation + bund mangrove/vetiver stabilization.",
+        "base_scores": {
+            "water_sustainability": 83.0,
+            "soil_improvement": 80.0,
+            "climate_resilience": 91.0,
+            "economic_potential": 86.0,
+            "erosion_protection": 88.0,
+            "farmer_preference": 79.0,
+        },
+        "base_rationale": (
+            "Shortens the paddy window by ~15 days using salinity/submergence-tolerant varieties (e.g., Vyttila-11) "
+            "and reinforced bund/sluice water control to reduce extreme-rainfall lodging and early tidal salinity spikes."
+        ),
+    },
+    {
+        "id": "upland_pulse_in_polder_candidate",
+        "strategy_group": "Evaluated Candidate (Dry-Season Legume)",
+        "system_families": ["pokkali_rice_prawn", "conventional_rice_pulse", "cereal_legume", "upland_rainfed"],
+        "name": "Paddy + Dry-Season Terrestrial Pulse (Black Gram / Green Gram)",
+        "crops": ["Kharif Paddy Rice (Jun–Oct)", "Black Gram / Green Gram (Nov–Jan)"],
+        "season_calendar": "Jun–Oct (Paddy) → Nov–Jan (Residual-Moisture Pulse)",
+        "duration_days": 115,
+        "requires_aquaculture_preservation": False,
+        "is_terrestrial_dry_crop": True,
+        "water_demand_class": "low_dry_season",
+        "water_requirement_mm": 820,
+        "nitrogen_fixation_kg_ha": 55,
+        "salinity_tolerance_max_ec": 2.0,
+        "min_ph": 5.5,
+        "max_ph": 8.0,
+        "max_temp_c": 36.5,
+        "waterlogging_tolerance": "low",
+        "submergence_suitable": False,
+        "pest_cycle_interruption": "Very High — cereal-to-legume botanical family shift breaks stem-borer & blast cycles.",
+        "organic_matter_contribution": "High — root nodules add 45–60 kg N/ha and legume haulms enrich topsoil.",
+        "base_scores": {
+            "water_sustainability": 86.0,
+            "soil_improvement": 90.0,
+            "climate_resilience": 78.0,
+            "economic_potential": 76.0,
+            "erosion_protection": 82.0,
+            "farmer_preference": 74.0,
+        },
+        "base_rationale": (
+            "Classic rice–pulse rotation that fixes atmospheric nitrogen and thrives on residual post-monsoon moisture "
+            "in well-to-moderately drained non-saline fields, but is agronomically unsuitable for flooded saline tidal polders."
+        ),
+    },
+    # ---------------- CONVENTIONAL / UPLAND / ALLUVIAL SYSTEMS ----------------
+    {
+        "id": "conv_existing_rice_double_or_fallow",
+        "strategy_group": "A · Existing Farming System",
+        "system_families": ["conventional_rice_pulse", "cereal_legume", "upland_rainfed"],
+        "name": "Existing Cereal–Cereal / Rice–Fallow Baseline",
+        "crops": ["Kharif Paddy / Primary Cereal (Jun–Oct)", "Second-Crop Paddy or Seasonal Fallow (Nov–Feb)"],
+        "season_calendar": "Jun–Oct (Main Crop) → Nov–Feb (Second Cereal / Fallow)",
+        "duration_days": 135,
+        "requires_aquaculture_preservation": False,
+        "is_terrestrial_dry_crop": True,
+        "water_demand_class": "high_dry_season",
+        "water_requirement_mm": 1550,
+        "nitrogen_fixation_kg_ha": 0,
+        "salinity_tolerance_max_ec": 3.0,
+        "min_ph": 5.2,
+        "max_ph": 8.2,
+        "max_temp_c": 37.0,
+        "waterlogging_tolerance": "moderate",
+        "submergence_suitable": True,
+        "pest_cycle_interruption": "Low — continuous cereal monoculture/fallow allows weed and pest carryover.",
+        "organic_matter_contribution": "Low–Moderate — continuous tillage depletes labile nitrogen unless straw is retained.",
+        "base_scores": {
+            "water_sustainability": 44.0,
+            "soil_improvement": 46.0,
+            "climate_resilience": 54.0,
+            "economic_potential": 72.0,
+            "erosion_protection": 58.0,
+            "farmer_preference": 84.0,
+        },
+        "base_rationale": (
+            "Reflects familiar continuous cereal/rice baseline with established market channels, "
+            "but carries higher dry-season irrigation demand and zero biological nitrogen fixation."
+        ),
+    },
+    {
+        "id": "conv_climate_adaptive_millet_legume",
+        "strategy_group": "C · Climate-Adaptive Strategy",
+        "system_families": ["conventional_rice_pulse", "cereal_legume", "upland_rainfed"],
+        "name": "Short-Duration Resilient Cereal / Millet + Mulched Legume–Oilseed Cover (Cowpea / Sesame)",
+        "crops": ["Short-Duration Paddy / Finger Millet (Jun–Sep)", "Cowpea Cover + Sesame (Oct–Jan)"],
+        "season_calendar": "Jun–Sep (Short Kharif) → Oct–Jan (Drought-Resilient Legume/Oilseed)",
+        "duration_days": 105,
+        "requires_aquaculture_preservation": False,
+        "is_terrestrial_dry_crop": True,
+        "water_demand_class": "very_low_dry_season",
+        "water_requirement_mm": 690,
+        "nitrogen_fixation_kg_ha": 42,
+        "salinity_tolerance_max_ec": 3.2,
+        "min_ph": 5.3,
+        "max_ph": 8.3,
+        "max_temp_c": 39.5,
+        "waterlogging_tolerance": "moderate",
+        "submergence_suitable": False,
+        "pest_cycle_interruption": "Very High — three-family rotation suppresses soil-borne pathogens and stem borers.",
+        "organic_matter_contribution": "High — residue mulching plus legume biomass protects soil moisture under heat.",
+        "base_scores": {
+            "water_sustainability": 91.0,
+            "soil_improvement": 84.0,
+            "climate_resilience": 92.0,
+            "economic_potential": 78.0,
+            "erosion_protection": 89.0,
+            "farmer_preference": 71.0,
+        },
+        "base_rationale": (
+            "Reduces irrigation water requirement by >40% compared with double-cropped paddy while adding drought-tolerant "
+            "cowpea/sesame canopy cover to buffer high temperatures and erratic monsoon withdrawal."
+        ),
+    },
+]
+

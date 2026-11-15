@@ -1,0 +1,983 @@
+# FIELDWISE AI
+## Complete Project Development Specification & Antigravity Implementation Brief
+
+**Project:** Field Shift – Adapting Farms with NASA Data  
+**Product:** FIELDWISE AI – Satellite Intelligence for Resilient Farming  
+**Platform:** Responsive web application  
+**Primary demonstration:** Pokkali rice–prawn farming, Kerala, India  
+**Core technologies:** React, TypeScript, Python, FastAPI, Google Earth Engine, NASA APIs, PostGIS
+
+---
+
+# PART 1 — PRODUCT REQUIREMENTS DOCUMENT
+
+## 1. Project Overview
+
+FIELDWISE AI is a geospatial agricultural intelligence platform that combines NASA Earth observation datasets, local agricultural information, soil characteristics and farmer preferences to identify agricultural vulnerabilities and evaluate crop-rotation strategies.
+
+The application should help farmers and agricultural experts understand how environmental conditions have changed over time and explore alternative farming strategies.
+
+The platform must provide:
+
+- Historical environmental analysis.
+- Satellite-based vegetation monitoring.
+- Rainfall and temperature trend analysis.
+- Water availability indicators.
+- Soil and crop suitability assessment.
+- Crop-rotation scenario comparison.
+- Climate what-if simulation.
+- Explainable recommendations.
+- Evidence-backed agricultural reports.
+
+### Primary objective
+
+Convert NASA Earth observation data into practical, explainable agricultural decisions.
+
+## 2. Target Users
+
+1. Farmers – understand farm conditions and explore rotation options.
+2. Agricultural experts – evaluate soil and crop suitability.
+3. Researchers – analyse environmental trends.
+4. Agricultural institutions – investigate climate-resilient farming strategies.
+5. Students and developers – explore satellite-based agricultural intelligence.
+
+## 3. Initial Demonstration Region
+
+Start with Pokkali agricultural fields in Kumbalangi, Ernakulam, Kerala.
+
+This farming system is particularly suitable because rice cultivation generally occurs from June to mid-October, followed by prawn farming during the higher-salinity period from November to April.
+
+Research reference:
+
+https://epubs.icar.org.in/index.php/JoSSWQ/article/view/130017
+
+The application must support other agricultural regions and conventional crop rotations through configurable crop and soil profiles.
+
+Do not make Pokkali-specific assumptions universal.
+
+## 4. NASA Data Integration
+
+The application should use these datasets:
+
+| Dataset | Information | Purpose |
+|---|---|---|
+| NASA POWER | Temperature, precipitation, solar radiation | Historical climate |
+| GPM IMERG | Precipitation | Rainfall variability |
+| SMAP | Soil moisture | Regional water availability |
+| Landsat 8/9 | Surface reflectance | Vegetation monitoring |
+| MODIS | NDVI/EVI | Long-term vegetation patterns |
+| ECOSTRESS | Land surface temperature, evapotranspiration | Heat and water stress |
+| SRTM | Elevation | Terrain and drainage context |
+| GRACE/GRACE-FO | Terrestrial water storage | Regional water trends |
+
+### Integration priority
+
+**Phase 1:**
+
+- NASA POWER API
+- Landsat 8/9 through Google Earth Engine
+- GPM IMERG
+- SMAP
+
+**Phase 2:**
+
+- MODIS
+- ECOSTRESS
+- SRTM
+- GRACE
+
+Never fabricate observations when a dataset is unavailable.
+
+Every dataset must have:
+- Source name.
+- Product identifier.
+- Observation period.
+- Spatial resolution.
+- Temporal resolution.
+- Processing date.
+- Missing-data status.
+
+NASA POWER documentation:
+
+https://power.larc.nasa.gov/docs/services/api/temporal/daily/
+
+Earth Engine catalogue:
+
+https://developers.google.com/earth-engine/datasets
+
+## 5. Core Analytical Indicators
+
+### Climate indicators
+
+- Seasonal rainfall totals.
+- Rainfall anomalies.
+- Average temperature.
+- Maximum temperature.
+- Temperature anomalies.
+- Extreme rainfall frequency.
+- Seasonal rainfall distribution.
+
+### Vegetation indicators
+
+NDVI:
+
+NDVI = (NIR - Red) / (NIR + Red)
+
+EVI:
+
+EVI = 2.5 × (NIR - Red) / (NIR + 6 × Red - 7.5 × Blue + 1)
+
+The application should calculate vegetation indices from appropriately scaled, cloud-masked surface reflectance.
+
+### Water indicators
+
+- Soil moisture.
+- Soil moisture anomaly.
+- Rainfall minus evapotranspiration.
+- Seasonal water availability.
+- Water deficit and surplus indicators.
+
+A simplified rainfall-minus-ET calculation must be labelled as a partial water-balance indicator, not a complete hydrological model.
+
+### Soil indicators
+
+Accept farmer-entered or laboratory-derived:
+
+- Soil pH.
+- Electrical conductivity.
+- Organic carbon.
+- Nitrogen.
+- Phosphorus.
+- Potassium.
+- Soil texture.
+- Soil moisture.
+- Salinity.
+
+NASA observations must not be represented as direct measurements of soil pH, EC or nutrient concentrations.
+
+## 6. Main Application Modules
+
+### Module A: Farm Explorer
+
+- Interactive satellite map.
+- Draw field boundaries.
+- Import GeoJSON.
+- Select existing demonstration farms.
+- Display field area.
+- Display location and coordinates.
+- Save multiple farms.
+- Select analysis periods.
+
+### Module B: Earth Intelligence
+
+Display:
+- NDVI map.
+- EVI map.
+- Rainfall map.
+- Soil moisture map.
+- Temperature map.
+- Historical vegetation trends.
+- Satellite observation dates.
+
+Each map layer must identify its underlying data source and resolution.
+
+### Module C: Climate History
+
+Display interactive graphs for:
+
+- Monthly rainfall.
+- Annual rainfall.
+- Temperature trends.
+- Seasonal anomalies.
+- Soil moisture.
+- Vegetation indices.
+
+Allow users to compare different years and seasons.
+
+### Module D: Farm Vulnerability
+
+Generate five indicators:
+
+1. Water stress.
+2. Heat exposure.
+3. Excess rainfall/flood exposure.
+4. Vegetation deterioration.
+5. Soil degradation risk.
+
+Show the methodology and confidence of each indicator.
+
+Do not invent a risk percentage. Where there is insufficient evidence, display insufficient data.
+
+### Module E: Rotation Lab
+
+This is the most important module.
+
+Compare at least three scenarios:
+
+A. Existing farming system.
+
+B. Soil improvement strategy.
+
+C. Climate-adaptive strategy.
+
+For conventional farms, support locally appropriate rice–pulse, cereal–legume and cover-crop rotation options where agronomically feasible.
+
+For Pokkali, preserve the traditional rice–prawn baseline and evaluate realistic modifications without automatically treating aquaculture as a crop to replace.
+
+Compare:
+
+- Water requirements.
+- Soil improvement potential.
+- Nitrogen fixation.
+- Organic matter contribution.
+- Growing-season compatibility.
+- Salinity tolerance.
+- Waterlogging tolerance.
+- Pest-cycle interruption.
+- Erosion protection.
+- Market suitability.
+- Farmer preferences.
+
+### Module F: Recommendation Engine
+
+Use a hybrid decision model.
+
+First, apply hard agronomic constraints.
+
+Exclude unsuitable crops based on:
+- Soil salinity.
+- pH.
+- Waterlogging.
+- Growing-season duration.
+- Temperature limits.
+- Water availability.
+- Disease constraints.
+- Farmer limitations.
+
+Then use multi-criteria scoring.
+
+Initial weights:
+
+| Criterion | Weight |
+|---|---:|
+| Water sustainability | 25% |
+| Soil improvement potential | 25% |
+| Climate resilience | 20% |
+| Economic suitability | 15% |
+| Erosion protection | 10% |
+| Farmer preference | 5% |
+
+Formula:
+
+Final Score = Σ (Criterion Score × Criterion Weight)
+
+Normalise scores to 0–100.
+
+Allow farmers to modify priorities, but never allow a preference score to override a hard agronomic exclusion.
+
+The recommendation must explain the factors behind its ranking.
+
+### Module G: Climate Simulator
+
+Allow hypothetical adjustments:
+
+- Rainfall: -20% to +20%.
+- Temperature: -1°C to +3°C.
+- Water availability: -30% to +30%.
+- Growing-season shift: -30 to +30 days.
+
+Recalculate scenario suitability.
+
+Clearly identify these as user-defined hypothetical scenarios, not official NASA forecasts.
+
+### Module H: Decision Report
+
+Generate a PDF report containing:
+
+- Farm profile.
+- Analysis period.
+- Data sources.
+- Environmental indicators.
+- Historical trends.
+- Vulnerability assessment.
+- Three rotation strategies.
+- Comparative scores.
+- Supporting evidence.
+- Limitations.
+- Recommendations for local validation.
+
+## 7. Technical Architecture
+
+### Frontend
+
+- React
+- TypeScript
+- Vite
+- Tailwind CSS
+- shadcn/ui
+- Lucide icons
+- MapLibre GL JS
+- Recharts
+
+### Backend
+
+- Python
+- FastAPI
+- Pydantic
+- Pandas
+- NumPy
+- GeoPandas
+- Rasterio
+- Scikit-learn
+
+### Geospatial processing
+
+- Google Earth Engine Python API.
+- NASA POWER REST API.
+- Raster processing.
+- Temporal aggregation.
+- Spatial analysis.
+
+### Database
+
+- PostgreSQL.
+- PostGIS.
+
+Store:
+- Users.
+- Farms.
+- Farm boundaries.
+- Soil profiles.
+- Crop histories.
+- Environmental indicators.
+- Rotation scenarios.
+- Analysis reports.
+
+### Suggested backend structure
+
+backend/
+- app/
+  - main.py
+  - api/
+  - models/
+  - schemas/
+  - services/
+  - satellite/
+  - analytics/
+  - recommendations/
+  - reports/
+  - database/
+  - config/
+
+frontend/
+- src/
+  - components/
+  - pages/
+  - layouts/
+  - hooks/
+  - services/
+  - maps/
+  - charts/
+  - types/
+
+## 8. Data Resolution and Reliability
+
+Never resample coarse satellite data to a finer grid and imply that it has gained additional spatial detail.
+
+Display the native resolution of every source.
+
+Use:
+- Landsat for field-scale vegetation analysis.
+- MODIS for broader and longer-term vegetation analysis.
+- GPM for regional precipitation patterns.
+- SMAP for regional soil moisture.
+- NASA POWER for regional meteorological context.
+- Local soil measurements for field-level soil chemistry.
+
+For small farms, explain that coarse products may not distinguish conditions between neighbouring fields.
+
+## 9. Design Requirements
+
+The application should look like a professional geospatial intelligence SaaS platform.
+
+Design direction:
+- Premium scientific dashboard.
+- Natural agricultural green combined with deep navy.
+- Light neutral backgrounds.
+- High-contrast data visualization.
+- Clear typography.
+- Professional map controls.
+- Minimal visual clutter.
+- Responsive layouts.
+- Consistent spacing and alignment.
+
+Avoid:
+- Generic AI chatbot appearance.
+- Excessive gradients.
+- Unnecessary glassmorphism.
+- Oversized cards.
+- Excessive rounded containers.
+- Decorative statistics without real data.
+- Fake maps and fake satellite measurements.
+
+## 10. Definition of Done
+
+The MVP is complete when:
+
+1. A user can create or select a farm.
+2. The system can retrieve actual NASA data.
+3. Historical analysis can be generated.
+4. At least three rotation scenarios can be compared.
+5. Each scenario has explainable scores.
+6. Missing information is clearly identified.
+7. The application can generate a report.
+8. The entire application works responsively.
+9. No fabricated measurements are presented as real observations.
+10. The application can demonstrate its functionality from beginning to end.
+
+---
+
+# PART 2 — MASTER ANTIGRAVITY IMPLEMENTATION PROMPT
+
+Paste the following entire prompt into Antigravity after opening your project workspace.
+
+## PROMPT START
+
+Act as a senior full-stack engineer, geospatial software architect, NASA Earth observation specialist, agricultural data scientist and professional SaaS product designer.
+
+I want you to build a complete production-quality web application named:
+
+FIELDWISE AI
+
+Tagline: Satellite Intelligence for Resilient Farming.
+
+This project is being developed for the NASA Space Apps Challenge 2026 challenge:
+
+Field Shift: Adapting Farms with NASA Data.
+
+Official challenge:
+https://www.spaceappschallenge.org/2026/challenges/field-shift-adapting-farms-with-nasa-data/
+
+I do not want a basic dashboard, static prototype, landing page or UI-only demonstration.
+
+I want a functional agricultural intelligence platform with a professional interface, real NASA data integration, geospatial visualisation, historical analysis and explainable crop-rotation recommendations.
+
+### 1. FIRST: INSPECT THE EXISTING PROJECT
+
+Before writing code:
+
+- Inspect the complete existing repository.
+- Identify the current framework and project structure.
+- Check installed dependencies.
+- Identify existing functional components.
+- Preserve useful existing code.
+- Do not blindly overwrite the project.
+- Prepare a development plan.
+- Then implement the complete application.
+
+Do not stop after producing the plan.
+
+### 2. PRODUCT CONCEPT
+
+FIELDWISE AI helps farmers understand environmental changes affecting their farmland and explore crop-rotation strategies.
+
+The system combines:
+
+- NASA satellite observations.
+- Historical weather information.
+- Vegetation indices.
+- Soil characteristics.
+- Crop requirements.
+- Farmer priorities.
+- Agricultural research.
+
+The application should identify agricultural vulnerabilities and compare at least three rotation strategies, including the existing farming system.
+
+Our initial demonstration region is Pokkali rice–prawn farming in Kumbalangi, Ernakulam, Kerala.
+
+Support other farming systems through configurable data and crop profiles.
+
+### 3. BUILD THE FOLLOWING APPLICATION PAGES
+
+**Page 1 – Overview**
+
+Create a professional agricultural intelligence dashboard.
+
+Display:
+- Selected farm.
+- Farm area.
+- Location.
+- Latest data acquisition status.
+- Current environmental indicators.
+- Water stress.
+- Temperature anomaly.
+- Vegetation condition.
+- Rainfall trends.
+- Recent observations.
+- Recommended next analysis.
+
+Only display measurements that have actually been retrieved or calculated. If unavailable, display an honest empty state.
+
+**Page 2 – Farm Explorer**
+
+Build an interactive geospatial map using MapLibre GL JS.
+
+Features:
+- Satellite basemap.
+- Standard map.
+- Field selection.
+- Polygon drawing.
+- GeoJSON import.
+- Farm boundary editing.
+- Area calculation.
+- Coordinate display.
+- Saved farm locations.
+
+Allow the user to select a field and initiate analysis.
+
+**Page 3 – Earth Intelligence**
+
+Create a satellite data exploration workspace.
+
+Include selectable layers:
+- Landsat NDVI.
+- Landsat EVI.
+- MODIS vegetation indices.
+- GPM precipitation.
+- SMAP soil moisture.
+- ECOSTRESS temperature and evapotranspiration when accessible.
+- SRTM elevation.
+
+Each layer should have:
+- Dataset name.
+- Observation date.
+- Spatial resolution.
+- Data status.
+- Legend.
+- Information panel.
+
+Do not display an empty or fake map layer as if it contains satellite data.
+
+**Page 4 – Climate History**
+
+Create interactive time-series visualisations.
+
+Include:
+- Annual rainfall.
+- Monthly rainfall.
+- Seasonal rainfall.
+- Average temperature.
+- Maximum temperature.
+- Temperature anomalies.
+- Soil moisture trends.
+- Vegetation trends.
+
+Provide date-range selection and year comparison.
+
+Use real retrieved values.
+
+**Page 5 – Soil and Farm Profile**
+
+Allow users to enter:
+
+- Soil pH.
+- EC.
+- Organic carbon.
+- Nitrogen.
+- Phosphorus.
+- Potassium.
+- Soil texture.
+- Soil moisture.
+- Salinity.
+- Irrigation availability.
+- Drainage.
+- Waterlogging history.
+
+Allow unknown values.
+
+Store the profile and show which parameters are missing.
+
+**Page 6 – Vulnerability Analysis**
+
+Calculate and visualise:
+
+- Water stress.
+- Heat exposure.
+- Excess rainfall and flooding exposure.
+- Vegetation deterioration.
+- Soil degradation risk.
+
+Display:
+- Risk category.
+- Calculation method.
+- Supporting observations.
+- Confidence level.
+- Data limitations.
+
+Do not generate fake scores.
+
+**Page 7 – Rotation Lab**
+
+This is the central feature.
+
+Create a sophisticated scenario-comparison workspace.
+
+Generate at least three strategies:
+
+A. Existing crop rotation.
+
+B. Soil improvement strategy.
+
+C. Climate-adaptive strategy.
+
+For the Pokkali demonstration:
+- Preserve the existing Pokkali rice–prawn cycle as the baseline.
+- Explore appropriate modifications to seasonal soil and water management.
+- Investigate suitable cover or soil-improvement interventions only when agronomically feasible.
+- Do not automatically recommend terrestrial crops for flooded saline fields.
+- Respect the traditional ecosystem and farmer livelihood.
+
+For other agricultural profiles, allow locally suitable crop rotations such as rice–pulse and cereal–legume systems.
+
+Compare each strategy using:
+- Water requirement.
+- Soil improvement potential.
+- Nitrogen fixation.
+- Organic matter contribution.
+- Climate suitability.
+- Salinity tolerance.
+- Growing-season compatibility.
+- Erosion protection.
+- Economic potential.
+- Farmer preferences.
+
+Show a clear comparative scorecard.
+
+Every recommendation must have a detailed explanation.
+
+**Page 8 – Climate Simulator**
+
+Create interactive sliders for:
+- Rainfall variation.
+- Temperature variation.
+- Water availability.
+- Growing-season changes.
+
+Recalculate scenario rankings after adjustments.
+
+Clearly mark the results as hypothetical scenarios, not official climate forecasts.
+
+**Page 9 – Decision Report**
+
+Generate a downloadable PDF containing the selected farm profile, actual environmental observations, data sources, vulnerability results, three rotation strategies, comparisons, uncertainties and recommendations.
+
+### 4. NASA DATA INTEGRATION
+
+Implement real data retrieval.
+
+NASA POWER API:
+
+https://power.larc.nasa.gov/api/temporal/daily/point
+
+Documentation:
+https://power.larc.nasa.gov/docs/services/api/temporal/daily/
+
+Use parameters appropriate to agricultural analysis, such as:
+- T2M
+- T2M_MAX
+- T2M_MIN
+- PRECTOTCORR
+- ALLSKY_SFC_SW_DWN
+
+Verify the current API parameter names and availability before implementation.
+
+Use historical data for the selected coordinates.
+
+For satellite processing, integrate Google Earth Engine.
+
+Documentation:
+https://developers.google.com/earth-engine/datasets
+
+Investigate the current catalogue identifiers for:
+
+- Landsat 8 Collection 2 Level 2.
+- Landsat 9 Collection 2 Level 2.
+- MODIS MOD13Q1.
+- NASA GPM IMERG V07.
+- NASA SMAP soil moisture products.
+- SRTM elevation.
+
+Do not assume an identifier is valid without checking the catalogue.
+
+Use appropriate scale factors, cloud masks, quality masks and temporal aggregation.
+
+For ECOSTRESS and GRACE, implement an optional integration only after verifying access and product compatibility.
+
+NASA data integration requirements:
+
+- Use server-side API calls.
+- Keep credentials and service account keys out of frontend code.
+- Add timeouts and error handling.
+- Cache expensive requests.
+- Handle missing data.
+- Record source and retrieval timestamps.
+- Avoid duplicate requests.
+- Do not download huge datasets unnecessarily.
+
+If Google Earth Engine authentication is required, create the integration structure and provide precise setup instructions. Never pretend authentication succeeded when it did not.
+
+### 5. SCIENTIFIC PROCESSING
+
+Implement:
+
+NDVI = (NIR - Red) / (NIR + Red)
+
+EVI = 2.5 × (NIR - Red) / (NIR + 6 × Red - 7.5 × Blue + 1)
+
+Rainfall anomaly = Observed seasonal rainfall - Historical seasonal mean.
+
+Standardised soil moisture anomaly = (Current soil moisture - Seasonal mean) / Seasonal standard deviation.
+
+Use matching seasonal baselines.
+
+For all indicators:
+- Document the calculation.
+- Track missing observations.
+- Display data quality.
+- Preserve native spatial resolution.
+- Avoid misleading spatial interpolation.
+
+### 6. RECOMMENDATION ENGINE
+
+Build a deterministic, explainable decision engine.
+
+Do not use an LLM as the source of agricultural suitability decisions.
+
+Use hard agronomic constraints first.
+
+Exclude crop options that violate critical constraints involving:
+- Salinity.
+- Soil pH.
+- Waterlogging.
+- Crop duration.
+- Temperature.
+- Water availability.
+- Crop calendar.
+- Farmer constraints.
+
+Then implement weighted multi-criteria scoring.
+
+Initial weights:
+
+Water sustainability: 25%.
+
+Soil improvement: 25%.
+
+Climate resilience: 20%.
+
+Economic potential: 15%.
+
+Erosion protection: 10%.
+
+Farmer preference: 5%.
+
+Make these weights configurable.
+
+Explain why each strategy scores as it does.
+
+When data is missing, show insufficient evidence instead of assuming a favourable value.
+
+### 7. BACKEND AND DATABASE
+
+Use Python FastAPI.
+
+Suggested endpoints:
+
+GET /api/farms
+
+POST /api/farms
+
+GET /api/farms/{id}
+
+POST /api/farms/{id}/soil-profile
+
+GET /api/farms/{id}/earth-observations
+
+GET /api/farms/{id}/climate-trends
+
+POST /api/farms/{id}/analyse
+
+POST /api/farms/{id}/rotation-scenarios
+
+POST /api/farms/{id}/climate-simulation
+
+GET /api/farms/{id}/decision-report
+
+Use PostgreSQL and PostGIS where practical.
+
+Create proper data models, validation, API documentation and error handling.
+
+If the current repository uses another suitable backend, assess whether it should be preserved rather than replacing it unnecessarily.
+
+### 8. USER INTERFACE DESIGN
+
+This must look like a professional commercial geospatial intelligence platform.
+
+Design inspiration:
+- Modern GIS software.
+- Precision agriculture SaaS.
+- Scientific data dashboards.
+- Professional environmental monitoring platforms.
+
+Visual direction:
+- Deep forest green.
+- Navy.
+- Off-white backgrounds.
+- Subtle neutral borders.
+- Professional typography.
+- Clean charts.
+- High-quality maps.
+- Carefully controlled spacing.
+
+Use a consistent design system.
+
+The layout should include:
+- Left navigation sidebar.
+- Main content area.
+- Contextual information panel.
+- Map workspace.
+- Responsive mobile layout.
+
+Avoid:
+- Generic AI dashboard templates.
+- Excessive gradients.
+- Excessive glassmorphism.
+- Random icons.
+- Huge rounded cards.
+- Excessive empty space.
+- Fake statistics.
+- Decorative elements that reduce information density.
+
+Use meaningful loading, empty, error and success states.
+
+All buttons, sliders, filters, tabs and navigation must work.
+
+### 9. DEMONSTRATION MODE
+
+Create a clearly labelled demonstration farm profile for the Pokkali farming system.
+
+Provide sample soil profiles and sample crop history only if they are explicitly marked as illustrative.
+
+Real NASA observations must be retrieved separately.
+
+Do not combine illustrative values and real satellite observations without clearly identifying their origins.
+
+The user must be able to distinguish:
+- Live or recently retrieved observations.
+- Historical satellite observations.
+- User-entered soil data.
+- Illustrative demonstration values.
+- Model-derived estimates.
+
+### 10. TESTING AND VALIDATION
+
+Test the complete application.
+
+Verify:
+- Farm creation.
+- Polygon drawing.
+- API connectivity.
+- NASA POWER retrieval.
+- Satellite processing.
+- NDVI calculation.
+- Climate trend calculations.
+- Missing-data handling.
+- Soil constraints.
+- Three-scenario comparison.
+- Recommendation explanations.
+- Climate simulator.
+- PDF report generation.
+- Mobile responsiveness.
+
+Do not leave non-functional placeholder buttons.
+
+If a service cannot be accessed because authentication is unavailable, provide a clear setup instruction and a graceful unavailable state.
+
+### 11. IMPLEMENTATION ORDER
+
+Implement in this order:
+
+1. Inspect and structure the repository.
+2. Establish the design system.
+3. Build application navigation and pages.
+4. Implement farm creation and map interaction.
+5. Build backend and database.
+6. Integrate NASA POWER.
+7. Integrate Earth Engine.
+8. Implement data processing.
+9. Build vulnerability analysis.
+10. Implement rotation scenarios.
+11. Implement climate simulation.
+12. Generate decision reports.
+13. Test all features.
+14. Polish the interface.
+
+Do not stop after the frontend.
+
+Do not replace actual processing with random values.
+
+Do not mark features as complete when they are only mocked.
+
+### 12. FINAL EXPECTATION
+
+The final result should be a working web application that demonstrates the complete workflow:
+
+Select a real farm → Retrieve NASA observations → Analyse environmental changes → Identify vulnerabilities → Compare three rotation strategies → Explain the recommendation → Generate a decision report.
+
+The application should be impressive visually, but scientific correctness, actual data integration, transparent limitations and functional implementation are more important than visual decoration.
+
+Begin by inspecting the repository and then implement the application. Continue through testing and fixing issues rather than stopping at a design proposal.
+
+## PROMPT END
+
+---
+
+# PART 3 — IMPORTANT IMPLEMENTATION NOTES
+
+Before running the application, prepare:
+
+1. Google Earth Engine access and authentication.
+2. NASA POWER API connectivity.
+3. PostgreSQL/PostGIS if using persistent geospatial storage.
+4. Backend environment variables.
+5. A verified demonstration field boundary.
+
+Suggested environment variables:
+
+```env
+DATABASE_URL=
+EARTH_ENGINE_PROJECT=
+NASA_POWER_BASE_URL=https://power.larc.nasa.gov/api/temporal/daily/point
+```
+
+Never place service account credentials or private keys in frontend environment variables.
+
+## PART 4 — FINAL ACCEPTANCE CHECKLIST
+
+- [ ] Professional responsive application.
+- [ ] Functional interactive farm map.
+- [ ] Actual NASA POWER observations.
+- [ ] Actual Landsat-derived vegetation indicators.
+- [ ] Historical environmental graphs.
+- [ ] Soil profile management.
+- [ ] Five-component vulnerability assessment.
+- [ ] Three or more rotation scenarios.
+- [ ] Explainable scoring.
+- [ ] Climate what-if simulator.
+- [ ] PDF decision report.
+- [ ] Dataset provenance and resolution.
+- [ ] Honest missing-data handling.
+- [ ] End-to-end testing.
+- [ ] Working demonstration.
+
+**The final product must demonstrate real Earth observation data being converted into practical agricultural decision support, not simply present a collection of attractive charts.**
